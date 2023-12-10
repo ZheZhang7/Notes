@@ -9,10 +9,11 @@
 ## 类型顺序
 
 1. 顶层类型 unknown any
-2. object
+2. Object
 3. Number String Boolean
 4. number string boolean
-5. 123 6. never
+5. 123 '124' ture
+6. never
 
 ## 任意类型 any 和 unknown 区别
 
@@ -98,7 +99,7 @@ interface IArguments {
 ## 联合类型 类型断言 交叉类型
 
 1. 联合类型 联合类型表示取值可以为多种类型中的一种 使用|
-2. 交叉类型 交叉类型是将多个类型合并为一个类型 使用& 和 extends 相似 但是 extends 表示继承
+2. 交叉类型 交叉类型是将多个类型合并为一个类型 既是又是 使用& 和 extends 相似 但是 extends 表示继承
 3. 类型断言 将类型推断为具体的数值 两种使用方法
 
 ```
@@ -170,6 +171,7 @@ let promise: Promise<number> = new Promise((resolve: Function, reject: Function)
 3. super 原理 super.constructor.call(); 也就是可以通过 super 给父类传参
 4. 静态方法 通过类直接调用 例如：Promise.all() static 里面的 this 只能指向其他 static
 5. get set 和 object.defineProperty()基本一致 拦截器
+6. 基类 抽象类(abstract) 所定义的抽象类 只能继承 不能实例化 所定义的方法 只能进行描述 不能进行具体的实现
 
 ```
 // 定义参数类型
@@ -278,4 +280,180 @@ class Ref {
 const ref = new Ref(1);
 ref.val = 2;
 console.log(ref.val);
+
+// 抽象类
+abstract class Animal {
+    name: string;
+    constructor(name: string) {
+        this.name = name;
+        console.log('[Animal]', name);
+
+    }
+    getName():string {
+        console.log('[getName]', this.name);
+        return this.name;
+    }
+    // 抽象方法
+    abstract init(name:string):void;
+}
+
+// 通过派生类进行继承
+class Cat extends Animal {
+    constructor() {
+        super('cat');
+    }
+    init(name:string) {
+        console.log('[init]',name);
+    }
+    setName(name: string) {
+        this.name = name;
+        console.log('[setName]', this.name);
+    }
+}
+
+let cat = new Cat();
+cat.init('init');
+cat.setName('1111');
+cat.getName();
+```
+
+## 元组类型
+
+应用可以定义 excel 返回的数据
+
+```
+let arr2:[number, string] = [1, 'a'];
+arr2.push(3);
+console.log(arr2)
+type first = typeof arr2[0];
+let num:first = 1;
+```
+
+## 枚举类型 enum
+
+1. 普通枚举 递增枚举(不赋值时默认从 0 递增) 自定义枚举 字符串枚举 接口枚举 const 枚举
+2. const 枚举声明 和 普通枚举的区别
+   **变量编译后是常量，普通声明编译后是对象。**因此，为了避免在额外生成的代码上的开销和额外的非直接对枚举成员的访问，我们可以使用 const 枚举。
+3. 反向映射 只能使用数字类型；正向映射（key-->value） 反向映射(value-->key)
+
+```
+enum Color {
+    Red = 0,
+    Green,
+    Blue
+}
+enum Color2 {
+    red = 'red',
+    green = 'green',
+    blue = 'blue'
+}
+interface A {
+    red: Color2.red;
+}
+let a:A = {
+    red: Color2.red,
+}
+
+console.log(a.red);
+console.log(Color['Red']);
+
+// const 枚举
+const enum Types {
+    success,
+    fail
+}
+
+let code:number = 1;
+if (code == Types.success) {
+    console.log('success');
+} else {
+    console.log('fail');
+}
+
+// 映射
+
+enum MapTypes {
+    success,
+}
+
+let Num:number = MapTypes.success;
+let key = MapTypes[Num];
+console.log(`value--${Num}`, `key--${key}`);
+```
+
+## 类型别名 type
+
+1. 类型别名用来给一个类型起个新名字，类型别名常用于联合类型
+2. type 和 interface 的区别
+   1. 类型别名可以作用于原始类型，而接口不行
+   2. 两个 type 不能使用 extends 继承, 可以使用 &
+   3. extends 在 type 中表示 包含意思 左边是右边类型的子类型
+
+```
+type s = string | number;
+type s1 = () => void;
+type s3 = 1 extends unknown ? 1 : 0;
+let params2:s3 = 1;
+console.log(params2);
+```
+
+## 类型推断
+
+1. ts 自带：在没有明确指定类型时，推测出一个类型
+2. 声明变量时直接赋值，但不指明类型，不能再赋值其他类型
+3. 声明变量时指明类型，但未赋值，可以赋值其他类型， 推断为 any 类型
+
+```
+// 类型推断为number
+let guess = 1;
+
+// 声明变量不赋值 类型推断为any
+let guess2;
+guess2 = 1;
+guess2 = 'abc';
+```
+
+## never 类型
+
+1. 表示不应该存在的状态
+2. 返回 never 的函数必须存在无法达到的终点
+3. never 在联合类型中会被直接移除
+4. 适用于兜底逻辑
+
+```
+// a 为never类型
+type a = string & number;
+
+// 返回never的函数必须存在无法达到的终点
+// 死循环 没有返回值
+let loop = ():never => {
+    while(true) {}
+}
+
+// 报错，肯定不会有返回值
+let throwE = ():never => {
+    throw new Error('error');
+}
+
+// string | number never被直接移除
+type neverParams = number | string | never
+
+type name = 'zhangsan' | 'lisi' | 'wangwu';
+let choseName = (value:name) => {
+    switch (value) {
+        case 'zhangsan':
+            console.log('zhangsan');
+            break;
+        case 'lisi':
+            console.log('lisi');
+            break;
+        case 'wangwu':
+            console.log('wangwu');
+            break;
+        default:
+            // 兜底逻辑
+            const error: never = value;
+            return error;
+    }
+}
 ```

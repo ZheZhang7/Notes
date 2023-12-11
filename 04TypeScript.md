@@ -332,8 +332,7 @@ let num:first = 1;
 ## 枚举类型 enum
 
 1. 普通枚举 递增枚举(不赋值时默认从 0 递增) 自定义枚举 字符串枚举 接口枚举 const 枚举
-2. const 枚举声明 和 普通枚举的区别
-   **变量编译后是常量，普通声明编译后是对象。**因此，为了避免在额外生成的代码上的开销和额外的非直接对枚举成员的访问，我们可以使用 const 枚举。
+2. const 枚举声明 和 普通枚举的区别。变量编译后是常量，普通声明编译后是对象。因此，为了避免在额外生成的代码上的开销和额外的非直接对枚举成员的访问，我们可以使用 const 枚举。
 3. 反向映射 只能使用数字类型；正向映射（key-->value） 反向映射(value-->key)
 
 ```
@@ -455,5 +454,94 @@ let choseName = (value:name) => {
             const error: never = value;
             return error;
     }
+}
+```
+
+## symbol 类型
+
+1. symbol.for for 全局查看 symbol 有没有注册过这个 key，如果有直接用，否则创建
+2. 应用场景：解决对象属性重复问题，用作对象的键
+3. symbol 无法通过 for...of 遍历得到
+4. Object.getOwnPropertySymbols(obj) 只能拿到 symbol 定义的属性 key
+5. Reflect.ownKeys(obj) 能拿到 symbol 及普通属性
+6. 迭代器的语法糖 for...of
+7. 解构底层也是调用[symbol.iterator]
+8. 给对象添加 for...of 也就是添加迭代器
+
+```
+let a1:symbol = Symbol(1);
+let a2:symbol = Symbol(1);
+
+// false
+console.log(a1 == a2);
+
+// true
+console.log(Symbol.for('a') === Symbol.for('a'))
+
+// { name: 1, [Symbol(1)]: 111, [Symbol(1)]: 222 }
+let obj2 = {
+    name: 1,
+    [a1]: 111,
+    [a2]: 222
+}
+
+console.log(obj2);
+
+Object.getOwnPropertySymbols(obj2);
+Reflect.ownKeys(obj2);
+
+let arr1:number[] = [1,2,3];
+
+// 实现迭代器
+let each = (value:any):void => {
+    let It:Iterator<any> = value[Symbol.iterator]();
+    let next:any = {done: false};
+    while (!next.done) {
+        next = It.next();
+        if (!next.done) {
+            console.log(next.value);
+        }
+    }
+}
+
+each(arr1);
+
+for (let value of arr1) {
+    console.log(value);
+}
+
+let [a,b,c] = [4,5,6];
+let arr2:number[] = [4,5,6];
+let copy:number[] = [...arr2];
+console.log(a,b,c);
+console.log(copy);
+
+// 使用for...of遍历对象
+let obj = {
+    max: 5,
+    current: 0,
+    [Symbol.iterator]() {
+        return {
+            max: this.max,
+            current: this.current,
+            next() {
+                if (this.current == this.max) {
+                    return {
+                        value:undefined,
+                        done: true
+                    }
+                }else {
+                    return {
+                        value: this.current++,
+                        done: false
+                    }
+                }
+            }
+        }
+    }
+}
+
+for (let value of obj) {
+    console.log('symbol', value);
 }
 ```

@@ -545,3 +545,105 @@ for (let value of obj) {
     console.log('symbol', value);
 }
 ```
+
+## 泛型
+
+1. 不预先指定具体类型
+2. 在应用中，大多数用在调用接口中
+3. 泛型约束 extends 用于约束的类型
+4. extends 配合 keyof 获取对象的 key
+
+```
+// 函数用法
+let pushEle = <T>(a:T, b:T):Array<T> => {
+    let arr:Array<T> = [];
+    arr.push(a,b);
+    console.log(arr);
+    return arr;
+}
+
+pushEle(1,2);
+pushEle('a', 'b');
+
+// 类型别名用法
+type A<T> = number | string | T;
+let a:A<boolean> = '1223'
+console.log(a)
+
+// 接口用法
+interface Name<T> {
+    name: T,
+}
+
+let firname:Name<string> = {
+    name: 'zhang'
+}
+
+console.log(firname);
+
+// 可以传递默认值
+function add<T, K = number> (params1: T, params2: K): Array<T | K> {
+    let arr:Array<T | K> = [];
+    arr.push(params1, params2);
+    console.log(arr);
+    return arr;
+}
+
+add(Math.random(), '123');
+
+// 具体案例，封装一个get方法
+let axios = {
+    get<T, K> (url: string):Promise<T | K> {
+        return new Promise((resolve: (value: T) => void, reject: (value: K) => void) => {
+            let xhr: XMLHttpRequest = new XMLHttpRequest();
+            xhr.open('GET', url);
+            xhr.send(null);
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    resolve(JSON.parse(xhr.responseText));
+                }
+            }
+        })
+    }
+}
+
+interface Data {
+    message: string,
+    status: number
+}
+
+axios.get<Data, any>('./data.json').then((res: Data) => {
+    console.log(res.message);
+})
+
+// 泛型约束
+let example = <T extends number>(a: T, b: T): number=> {
+    return a + b;
+}
+
+// keyof
+
+let obj = {
+    name: 'zhang',
+    age: 18
+}
+
+let getKeys = <T extends object, K extends keyof T>(o: T, k: K): T[K] => {
+    console.log('[keyof]', o[k]);
+    return o[k];
+}
+
+getKeys(obj, 'age');
+
+// 给属性增加可选链
+interface test {
+    name: string,
+    age: number,
+    sex: string
+}
+
+type addSelect<T extends object> = {
+    [K in keyof T]?: T[K]
+}
+type practice = addSelect<test>;
+```

@@ -784,3 +784,70 @@ declare module 'express' {
     export default express;
 }
 ```
+
+## Mixins 混入
+
+1. interface 混入 Object.assign(params)
+2. class 混入
+
+```
+// interface 混入
+
+interface Name {
+    name: string
+}
+
+interface Age {
+    age: number
+}
+
+interface Sex {
+    sex: number
+}
+
+let a:Name = {name: 'zhang'};
+let b:Age = {age: 18};
+let c:Sex = {sex: 1};
+
+let obj:Name & Age & Sex = Object.assign(a, b, c);
+```
+
+```
+// class 混入
+class A {
+    type: boolean;
+    changeType():void {
+        this.type = !this.type;
+    }
+}
+
+class B {
+    name: string;
+    getName():string {
+        return this.name;
+    }
+}
+
+class C implements A,B {
+    type: boolean;
+    name: string;
+    changeType: () => void;
+    getName: () => string;
+}
+
+function Mixins(curCls: any, itemCls: any[]) {
+    itemCls.forEach(item => {
+        Object.getOwnPropertyNames(item.prototype).forEach(name=> {
+            curCls.prototype[name] = item.prototype[name];
+        })
+    })
+}
+
+Mixins(C, [A, B]);
+
+let cc = new C();
+cc.changeType();
+console.log(cc.type);
+cc.changeType();
+console.log(cc.type);
+```

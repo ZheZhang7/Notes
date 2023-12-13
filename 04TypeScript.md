@@ -739,3 +739,48 @@ let AAA = A.D;
 
 console.log(AAA.d);
 ```
+
+## 声明文件
+
+1. 声明文件 d.ts 关键字 declare
+2. express 包引入会报错，因为没有声明文件
+
+   两种解决方案 ： 1.npm i --save-dev @types/express 2.添加 declare module 'express' 文件
+
+```
+// 手写express声明文件
+// index.ts
+
+import express from "express";
+const app = express();
+const router = express.Router();
+app.use('/api', router);
+router.get('/api', (req: any, res: any) => {
+    res.json({
+        code: 200
+    })
+})
+app.listen(9001, () => {
+    console.log('server is running at port 9001');
+})
+```
+
+```
+// express.d.ts
+declare module 'express' {
+    interface Router {
+        get(path:string, cb: (req:any, res:any, next:any)=>void):void;
+    }
+    interface App {
+        use(path:string, router:any):void;
+        listen(port: number, cb?: ()=>void):void;
+    }
+    interface Express {
+        ():App
+        Router():Router;
+    }
+
+    const express: Express;
+    export default express;
+}
+```

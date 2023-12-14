@@ -851,3 +851,72 @@ console.log(cc.type);
 cc.changeType();
 console.log(cc.type);
 ```
+
+## 装饰器
+
+1. 使用
+   1.tsc --init 生成 tsconfig.json 文件 2.修改 tsconfig.json
+   "experimentalDecorators": true, "emitDecoratorMetadata": true
+2. 类装饰器 ClassDecorator 参数 target：构造函数
+   优点：知道 target 构造函数后，可以不修改原本代码，为其新增属性方法等
+3. 装饰器工厂： 借助闭包传值
+4. 方法装饰器 MethodDecorator
+5. 参数装饰器 ParameterDecorator
+6. 属性装饰器 PropertyDecorator
+
+```
+const Base:ClassDecorator = (target) => {
+    console.log(target);
+    target.prototype.say = ():void => {
+        console.log("hello");
+    }
+    target.prototype.name = 'zhang';
+}
+
+const Get: MethodDecorator = (...args) => {
+    console.log(args);
+}
+
+const Result: ParameterDecorator = (target, name, index) => {
+    console.log('a', target, name, index);
+}
+
+
+
+// 类装饰器
+@Base
+class Http {
+    //...
+    // 方法装饰器
+    // @Get;
+
+    // 参数装饰器
+    getList(@Result data:unknown) {
+        console.log(data);
+    }
+
+    create() {}
+
+}
+
+let http = new Http() as any;
+http.say();
+console.log(http.name);
+
+// Base(http);
+
+// 装饰器传参  装饰器工厂(闭包)
+const Base1 = (name:string) => {
+    const fn:ClassDecorator = (target) => {
+        target.prototype.name = name;
+    }
+    return fn;
+}
+@Base1('123')
+class Http1 {
+    //...
+}
+let http1 = new Http1() as any;
+console.log(http1.name);
+
+```

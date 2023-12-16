@@ -922,3 +922,96 @@ let http1 = new Http1() as any;
 console.log(http1.name);
 
 ```
+
+## Proxy & Reflect
+
+proxy 代理
+
+1. 实现对一个对象的代理，从而实现基本操作的拦截和自定义，例如属性查找，赋值等
+2. new Proxy(target, handler)
+   target: 要使用 Proxy 包装的目标对象（可以是任何类型的对象，包括原生数组，函数，甚至另一个代理）。
+   handler: 一个通常以函数作为属性的对象，各属性中的函数分别定义了在执行各种操作时代理 p 的行为。
+3. 常用拦截器方法（handler）：get set apply has ownKeys construct deleteProperty
+
+Reflect 反射
+
+1. 常用方法与 proxy 一致
+2. 并非构造函数 无法使用 new Reflect
+3. 和 Math 对象一样，配合 Proxy 使用
+
+```
+interface Person {
+    name: string,
+    age: number
+}
+
+let person: Person = {
+    name: 'zhang',
+    age: 18
+}
+
+// proxy(target, handler)
+
+let personProxy = new Proxy(person, {
+    // 取值
+    get(key) {
+
+    },
+    // 赋值 receiver保证上下文正确，也就是target
+    set(target, key, value, receiver) {
+        return true
+    },
+    // 拦截函数调用
+    apply () {
+
+    },
+    // 拦截in操作符
+    has () {
+        return true
+    },
+    // 拦截for...in
+    ownKeys () {
+        return []
+    },
+    // 拦截new操作符
+    construct () {
+        return {}
+    },
+    // 拦截 delete 操作符
+    deleteProperty (target, p) {
+        return true
+    },
+})
+
+
+//  实现mobx observable观察者模式
+
+// 事件存储器
+const list: Set<Function> = new Set();
+// 订阅函数
+const autoRun = (cb: Function) => {
+    if (!list.has(cb)) {
+        list.add(cb);
+    }
+}
+
+// 提供可观测数据函数
+const observable = <T extends object>(params: T) => {
+    return new Proxy(params, {
+        set(target, key, value, receiver) {
+            const result: boolean = Reflect.set(target, key, value, receiver);
+            // 监听值变化
+            list.forEach(cb => cb());
+            return result
+        }
+    })
+}
+
+const personP = observable({name: "abc", attr: '124'});
+
+autoRun(() => {
+    console.log("有变化");
+})
+
+personP.name = "123"
+```

@@ -747,6 +747,8 @@ console.log(AAA.d);
 
    两种解决方案 ： 1.npm i --save-dev @types/express 2.添加 declare module 'express' 文件
 
+[第三方声明文件包](https://www.npmjs.com/~types?activeTab=packages)
+
 ```
 // 手写express声明文件
 // index.ts

@@ -1015,3 +1015,43 @@ autoRun(() => {
 
 personP.name = "123"
 ```
+
+## 协变、逆变、双向协变
+
+1. 一个类型包含另一个类型的所有属性，就可以进行赋值，叫做协变
+2. 与协变相反，逆变发生在函数上，逆变就是将一个类型变为另一个类型的子集
+   3， 双向协变 typescript3.0 版本认为不安全, 需要开启配置 strictFunctionTypes:false,不建议
+
+```
+interface A {
+    name: string,
+    age: number
+}
+interface B {
+    name: string,
+    age: number,
+    sex: string
+}
+
+let a: A = {
+    name: 'zhang',
+    age: 18
+}
+let b: B = {
+    name: 'zhang',
+    age: 18,
+    sex: 'man'
+}
+
+// 协变
+a = b
+
+let fna = (params: A) => {}
+let fnb = (params: B) => {}
+
+// 逆变
+fnb = fna
+
+// 双向协变
+// fna = fnb
+```

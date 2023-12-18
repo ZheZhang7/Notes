@@ -1063,6 +1063,8 @@ fnb = fna
 3. Pick 选取部分属性
 4. Omit 排除部分属性，与 Pick 相反
 5. Exclude 排除部分属性，只接收联合类型
+6. Record 同时约束 key-value
+7. Readonly 只读属性
 
 ```
 // Partial
@@ -1118,4 +1120,22 @@ type Excludeuser = Exclude<test, 'a' | 'b'>;
 // 这里为什么是never?
 // never在联合类型中会被排除 'a' | 'b' | never ===> 'a' | 'b'
 type OwnExclude<T,K> = T extends K ? never : T;
+
+//Record
+type test1 = Record<'a' | 'b' | 'c', string>;
+const obj: Recorduser = {
+    'a': '1',
+    'b': '2',
+    'c': '3'
+}
+// 实现
+type OwnRecord<K extends keyof any, T> = {
+    [P in K]: T;
+}
+
+// Readonly 实现
+type OwnReadonly<T> = {
+    readonly [P in keyof T]: T[P];
+}
+
 ```

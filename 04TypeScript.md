@@ -1055,3 +1055,67 @@ fnb = fna
 // 双向协变
 // fna = fnb
 ```
+
+## 泛型工具
+
+1. Partial 将所有属性变为可选
+2. Required 将所有属性变为必选，与 Partial 相反
+3. Pick 选取部分属性
+4. Omit 排除部分属性，与 Pick 相反
+5. Exclude 排除部分属性，只接收联合类型
+
+```
+// Partial
+interface User1 {
+    name: string,
+    age: number,
+    sex: string
+}
+type Partialuser = Partial<User1>
+//实现
+type OwnPartial<T> = {
+    [P in keyof T]?: T[P]
+}
+
+//Required
+interface User2 {
+    name: string,
+    age: number,
+    sex: string
+}
+type Requireduser = Required<User2>
+//实现
+type OwnRequired<T> = {
+    [P in keyof T]-?: T[P];
+}
+
+// Pick
+interface User3 {
+    name: string,
+    age: number,
+    sex: string
+}
+type Pickuser = Pick<User3, 'name' | 'age'>
+//实现
+type OwnPick<T, K extends T> = {
+    [P in K]: T[P];
+}
+
+// Omit
+interface User4 {
+    name: string,
+    age: number,
+    sex: string
+}
+type Omituser = Omit<User4, 'name' | 'age'>
+//实现
+type OwnOmit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+
+// Exclude
+type test = 'a' | 'b' | 'c' | 'd';
+type Excludeuser = Exclude<test, 'a' | 'b'>;
+// 实现  extends表示分配
+// 这里为什么是never?
+// never在联合类型中会被排除 'a' | 'b' | never ===> 'a' | 'b'
+type OwnExclude<T,K> = T extends K ? never : T;
+```

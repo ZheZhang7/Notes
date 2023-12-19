@@ -1139,3 +1139,24 @@ type OwnReadonly<T> = {
 }
 
 ```
+
+## infer
+
+1. infer 充当占位符
+2. 元素提取
+
+```
+//定义一个类型 如果是数组类型 就返回 数组元素的类型 否则 传入什么类型 就返回什么类型
+type TYPE<T> = T extends Array<infer U> ? U : T;
+let arr: TYPE<Array<string>>
+
+// 提取元素
+type arr = ['a', 'b', 'c'];
+type TYPE2<T extends any[]> = T extends [infer first, ...any[]] ? first : never;
+let a:TYPE2<arr>;
+
+// 实现递归(翻转数组)
+type arr1 = [1,2,3,4];
+type ReveArr<T extends any[]> = T extends [infer first, ...infer rest] ? [...ReveArr<rest>,first] : T;
+type arr2 = ReveArr<arr1>;
+```

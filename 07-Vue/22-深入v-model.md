@@ -35,6 +35,7 @@
 子组件
 
 ```html
+<!-- :value="textVal" 子组件修改父组件的值,打破了单向数据流, 可以使用computed做中间件进行代理,子组件通过set, 不是直接修改数据 -->
 <template>
   <div v-if="modelValue" class="modal">
     <div class="close"><button @click="closeM">关闭</button></div>

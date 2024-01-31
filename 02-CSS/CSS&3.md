@@ -5,12 +5,12 @@
 - [可继承属性](#可继承属性)
 - [隐藏元素方法](#隐藏元素方法)
 - [盒模型](#盒模型)
-- [使用 `translate` 和 `poaition: absolute` 移动元素区别](#使用-translate-和-poaition:absolute-移动元素区别)
+- [使用 `translate` 和 `position:absolute` 移动元素区别](#使用-translate-和-position:absolute-移动元素区别)
 - [常见布局](#常见布局)
 - [flex 详解](#flex-详解)
 - [浮动](#浮动)
 - [BFC](#BFC)
-- [BEM 架构](BEM-架构)
+- [BEM 架构](#BEM-架构)
 
 ## 权重
 
@@ -45,7 +45,7 @@
 1. 标准盒模型（box-sizing：content-box）： content = width/height
 2. ie 盒模型（box-sizing：border-box）：content + padding + border = width/height
 
-## 使用 translate 和 poaition:absolute 移动元素区别
+## 使用 translate 和 position:absolute 移动元素区别
 
 参考链接：[整体原因](https://blog.csdn.net/thewar196/article/details/124602244)
 [浏览器渲染流程](https://blog.csdn.net/duola8789/article/details/79237553)<br />

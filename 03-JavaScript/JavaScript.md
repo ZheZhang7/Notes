@@ -1,5 +1,25 @@
 # JavaScript
 
+- [JS 数据类型](#JS-数据类型)
+- [JS 判断数据类型方法](#JS-判断数据类型方法)
+- [字符串方法](#字符串方法)
+- [数组方法](#数组方法)
+- [对象方法](#对象方法)
+- [预编译](#预编译)
+- [this apply call bind](#this-apply-call-bind)
+- [原型和原型链](#原型和原型链)
+- [闭包](#闭包)
+- [拷贝](#拷贝)
+- [继承](#继承)
+- [DOM](#DOM)
+- [BOM](#BOM)
+- [let const](#let-const)
+- [箭头函数](#箭头函数)
+- [Set Map](#Set-Map)
+- [Promise](#Promise)
+- [事件循环补充](#事件循环补充)
+- [Proxy Reflect](#Proxy-Reflect)
+
 ## JS 数据类型：
 
 number string boolean null undefined symbol object array
@@ -112,7 +132,7 @@ bind: 修改 this 指向，不调用函数。参数：this 指向，实参 1，2
 
 prototype 为原型对象、**proto**对象原型
 
-![原型和原型链.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4cd296c075174ee7a9dc168827bde17d~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=987&h=720&s=48689&e=png&b=ffffff)
+![原型和原型链.png](../source/image/Javascript/原型和原型链.png)
 
 ## 通过 new 方法创建对象的过程
 
@@ -250,7 +270,7 @@ const：定义常量（定义后，不可修改）
 3. 剩余参数是真实数组，arguments 是类数组对象
 4. 剩余参数更加灵活
 
-## set map
+## Set Map
 
 **set**
 

@@ -1,5 +1,31 @@
 # TypeScript
 
+- [基础类型](#基础类型)
+- [类型顺序](#类型顺序)
+- [任意类型 any 和 unknown 区别](#任意类型-any-和-unknown-区别)
+- [Object object {} 区别](#Object-object-{}-区别)
+- [interface 接口](#interface-接口)
+- [数组类型](#数组类型)
+- [联合类型 类型断言 交叉类型](#联合类型-类型断言-交叉类型)
+- [内置对象](#内置对象)
+- [Class 类](#Class-类)
+- [元组类型](#元组类型)
+- [枚举类型 enum](#枚举类型-enum)
+- [类型别名 type](#类型别名-type)
+- [类型推断](#类型推断)
+- [never 类型](#never-类型)
+- [symbol 类型](#symbol-类型)
+- [泛型](#泛型)
+- [tsconfig](#tsconfig)
+- [命名空间](#命名空间)
+- [声明文件](#声明文件)
+- [Mixins 混入](#Mixins-混入)
+- [装饰器](#装饰器)
+- [Proxy & Reflect](#Proxy-&-Reflect)
+- [协变、逆变、双向协变](#协变、逆变、双向协变)
+- [泛型工具](#泛型工具)
+- [infer](#infer)
+
 ## 基础类型
 
 1. number string boolean void 等
